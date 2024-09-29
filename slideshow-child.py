@@ -30,6 +30,41 @@ class ImageSlideshow:
         self.root.attributes('-fullscreen', True)
         self.show_image()
 
+    def zoom_effect(self, image, photo, steps=300, step_delay=100):
+        """
+        Gradually zooms into the image.
+        :param image: Original PIL image.
+        :param photo: Current ImageTk.PhotoImage object.
+        :param steps: Number of steps for the zoom effect.
+        :param step_delay: Delay in ms between each zoom step.
+        """
+        original_width, original_height = image.size
+        zoom_factor = 1.2  # 20% zoom
+        
+        # Increment for each step
+        width_step = int((original_width * zoom_factor - original_width) / steps)
+        height_step = int((original_height * zoom_factor - original_height) / steps)
+
+        def perform_zoom(step=0):
+            if step <= steps:
+                # Calculate new dimensions
+                new_width = original_width + step * width_step
+                new_height = original_height + step * height_step
+
+                # Resize the image
+                resized_image = image.resize((new_width, new_height), Image.LANCZOS)
+                photo = ImageTk.PhotoImage(resized_image)
+
+                # Update the label with the resized image
+                self.label.config(image=photo)
+                self.label.image = photo
+
+                # Continue zooming
+                self.root.after(step_delay, perform_zoom, step + 1)
+
+        perform_zoom()  # Start the zoom effect
+
+
     def show_image(self):
         if self.image_files:
             image_path = self.image_files[self.index]
@@ -58,6 +93,9 @@ class ImageSlideshow:
 
             self.label.config(image=photo)
             self.label.image = photo  # Keep a reference to avoid garbage collection
+            
+            # Apply zoom effect
+            self.zoom_effect(resized_image, photo)
 
             # Update title label with the filename (without extension)
             filename = os.path.splitext(os.path.basename(image_path))[0]  # Remove the extension
