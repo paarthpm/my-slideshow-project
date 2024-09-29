@@ -30,3 +30,6 @@ if __name__ == "__main__":
 
         # Wait for the slideshow to complete (you might need to handle this differently)
         time.sleep(1)  # Optional: Add a short delay before the next slideshow
+    
+    # shutting down the device after loop is complete
+    os.system('sudo shutdown -h now')
