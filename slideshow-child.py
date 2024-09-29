@@ -2,21 +2,17 @@ import os
 import random
 from PIL import Image, ImageTk
 import tkinter as tk
+import sys
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-# Folder containing the images (update with your local path)
-IMAGE_FOLDER = os.path.join(SCRIPT_DIR, 'images')
+# Get the list of image files from command-line arguments
+image_files = sys.argv[1:]  # Expecting a list of image paths as arguments
 
 class ImageSlideshow:
-    def __init__(self, root, folder_path, delay=2000):
+    def __init__(self, root, image_files, delay=2000):
         self.root = root
-        self.folder_path = folder_path
+        self.image_files = image_files
         self.delay = delay  # Delay between images in milliseconds
-        self.image_files = self.load_images()
 
-        # Shuffle the images for random display
-        random.shuffle(self.image_files)
-        
         # Hide the cursor
         self.root.config(cursor="none")
 
@@ -33,12 +29,6 @@ class ImageSlideshow:
         # Set to fullscreen
         self.root.attributes('-fullscreen', True)
         self.show_image()
-
-    def load_images(self):
-        # List all image files in the folder
-        valid_extensions = ['.jpg', '.png', '.gif', '.jpeg']
-        return [os.path.join(self.folder_path, f) for f in os.listdir(self.folder_path)
-                if os.path.splitext(f)[1].lower() in valid_extensions]
 
     def show_image(self):
         if self.image_files:
@@ -61,7 +51,9 @@ class ImageSlideshow:
                 new_width = int(screen_height * image_ratio)
 
             resized_image = image.resize((new_width, new_height), Image.LANCZOS)
-
+            # Release the previous image from the label
+            self.label.image = None  # Release the previous image
+            
             photo = ImageTk.PhotoImage(resized_image)
 
             self.label.config(image=photo)
@@ -72,10 +64,14 @@ class ImageSlideshow:
             self.title_label.config(text=filename)
 
             self.index = (self.index + 1) % len(self.image_files)
-            self.root.after(self.delay, self.show_image)  # Set the delay for the next image
+            if self.index == 0:
+                self.root.quit()  # Exit the slideshow after showing all images
+            else:
+                self.root.after(self.delay, self.show_image)
 
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Image Slideshow")
-    slideshow = ImageSlideshow(root, IMAGE_FOLDER, delay=20000)  # 20 seconds per image
+    if image_files:
+        slideshow = ImageSlideshow(root, image_files, delay=20000)  # 20 seconds per image
     root.mainloop()
