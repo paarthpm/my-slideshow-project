@@ -10,5 +10,5 @@ Installation for pi devices can be found in: [installation-readme.md](https://gi
 <br>
 
 The application is directly dependant on the number of images sent per batch for slideshow view. This has been restricted to lower integer as it is tested with pi zero 2w. The values can be tweaked depending on device performance.
-<br>
-The child script for slideshow is killed every time the slideshow display completes per batch and is controlled by the master script. This reduces resource consumption and the application has been able to continuously show image slideshows of 100 mid resoultion images 50-80% usage of both CPU and memory.
+<br><br>
+The child script for slideshow is killed every time the slideshow display completes per batch and is controlled by the master script. This reduces resource consumption and the application has been able to continuously show image slideshows of 100 mid resoultion images with CPU and memory usages in range of 50-80%.
