@@ -4,7 +4,7 @@ import time
 import subprocess
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-IMAGE_FOLDER = os.path.join(SCRIPT_DIR, 'images')
+IMAGE_FOLDER = os.path.join(SCRIPT_DIR, 'images-home')
 
 CHILD_SCRIPT = os.path.join(SCRIPT_DIR, 'slideshow-child.py')
 def load_images(folder_path):
@@ -25,7 +25,7 @@ if __name__ == "__main__":
     end_time = time.time() + 2 * 60 * 60  # 2 hours in seconds
 
     while time.time() < end_time:
-        selected_images = random.sample(images, 2)  # Select 10 random images
+        selected_images = random.sample(images, 10)  # Select 10 random images
         run_slideshow(selected_images)
 
         # Wait for the slideshow to complete (you might need to handle this differently)
